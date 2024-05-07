@@ -2,7 +2,7 @@ import Image from "next/image";
 import dp from '@/app/favicon.ico'
 import { IoIosSend } from "react-icons/io";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { date, onScroll } from "@/utils/functions";
+import { date } from "@/utils/functions";
 import { useSession } from "next-auth/react";
 import { INewPost } from "@/utils/types";
 import { Schema } from "mongoose";
@@ -61,16 +61,6 @@ const Textbox = () => {
 
   useEffect(() => {
 
-    if (typeof window !== 'undefined') {
-      // Code that uses window (only runs in the browser)
-
-      window.addEventListener('scroll', () => onScroll(setFixed))
-
-      return () => {
-        window.removeEventListener("scroll", () => onScroll(setFixed))
-      }
-
-    }
     // keep track of previous scroll position
   }, [])
 

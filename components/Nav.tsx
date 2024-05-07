@@ -1,6 +1,5 @@
 "use client"
 
-import { onScrollForNavigationBar } from "@/utils/functions";
 import { Session } from "next-auth";
 import { getProviders, signIn, signOut, useSession } from "next-auth/react"
 import Image from "next/image";
@@ -24,16 +23,16 @@ const Navigation = () => {
 
     setToProviders();
 
-    if (typeof window !== 'undefined') {
-      // Code that uses window (only runs in the browser)
+    // if (typeof window !== 'undefined') {
+    //   // Code that uses window (only runs in the browser)
 
-      window.addEventListener('scroll', () => onScrollForNavigationBar(setFixed, fixed));
+    //   window.addEventListener('scroll', () => onScrollForNavigationBar(setFixed, fixed));
 
-      return () => {
-        window.removeEventListener("scroll", () => onScrollForNavigationBar(setFixed, fixed));
-      }
+    //   return () => {
+    //     window.removeEventListener("scroll", () => onScrollForNavigationBar(setFixed, fixed));
+    //   }
 
-    }
+    // }
 
   }, [fixed])
 
