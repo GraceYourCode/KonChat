@@ -10,17 +10,29 @@ import { useEffect, useState } from "react"
 import Post from "./Post"
 import { myContext } from "@/utils/context"
 import { IPostProps, IReplyState } from '@/utils/types';
+import DeleteModal from './DeleteModal';
 
 const AllPosts = () => {
   const [posts, setPosts] = useState<IPostProps[]>();
-  const [submitting, setSubmitting] = useState<boolean>(false);
   const [reply, setReply] = useState<IReplyState | null>(null);
-  console.log(submitting)
+  const [edit, setEdit] = useState<IReplyState | null>(null);
+  const [toDelete, setToDelete] = useState<string | null>(null);
+  const [showDelete, setShowDelete] = useState<boolean>(false);
+
+  const popUpDelete = (id: string | null) => {
+    setShowDelete(prev => !prev);
+    console.log(id)
+    setToDelete(id);
+  }
 
   useEffect(() => {
     const getAllPosts = async () => {
       try {
-        const res = await fetch("/api/posts/all");
+        const res = await fetch("/api/posts/all", {
+          method: "POST",
+          next: { revalidate: 15 },
+          cache: "no-store"
+        });
         const data = await res.json()
         setPosts(data);
         console.log(data, "come")
@@ -34,12 +46,14 @@ const AllPosts = () => {
 
   return (
     <div className="flex flex-col items-center w-screen bg-background min-h-screen">
-      <main className="align-page flex flex-col gap-y-4 items-center pb-3 md:pb-5">
         <myContext.Provider value={{
           posts, setPosts,
-          submitting, setSubmitting,
-          reply, setReply
+          reply, setReply,
+          edit, setEdit,
+          toDelete, popUpDelete,
+          setShowDelete,
         }}>
+      <main className="align-page flex flex-col gap-y-4 items-center pt-3 md:pt-5">
         <>
           {posts &&
             posts.map((post: any) => (
@@ -47,8 +61,9 @@ const AllPosts = () => {
             ))
           }
         </>
-        </myContext.Provider>
+        {showDelete && <DeleteModal />}
       </main>
+        </myContext.Provider>
       <Textbox />
     </div>
   )

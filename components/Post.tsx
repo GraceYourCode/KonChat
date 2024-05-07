@@ -11,10 +11,22 @@ import { useContext, useEffect, useState } from "react"
 import { myContext } from "@/utils/context"
 import Replybox from "./ReplyBox"
 import { getTimeDifference } from "@/utils/functions"
+import EditBox from "./EditBox"
 
 const Post = ({ post }: { post: IPostProps }) => {
   const { data: session } = useSession();
   const { reply, setReply } = useContext(myContext);
+  const { edit, setEdit } = useContext(myContext);
+  const { popUpDelete } = useContext(myContext);
+  const [dateCreated, setDateCreated] = useState<string>("");
+
+  useEffect(() => {
+    const getDateCreated = async () => {
+      const date = await getTimeDifference(post.dateCreated);
+      setDateCreated(date)
+    }
+    getDateCreated();
+  }, [post.dateCreated])
 
   const showReplyBox = () => {
     setReply({
@@ -25,34 +37,48 @@ const Post = ({ post }: { post: IPostProps }) => {
     })
   }
 
+  const showEditBox = () => {
+    setEdit({
+      id: post._id,
+      show: true,
+    })
+  }
+
   return (
     <div className="flex flex-col items-end w-full gap-4">
-      <div className="bg-white p-5 rounded-md gap-4 items-start w-full min-h-fit flex">
+      {
+        edit !== null &&
+        edit.id === post._id && <EditBox contentToEdit={post.content} id={post._id.toString()}/>
+      }
+
+      <div className={`${edit === null ? "flex" : edit.id === post._id ? "hidden" : "flex"} bg-white p-5 rounded-md gap-4 items-start w-full min-h-fit`}>
 
         {
           // this aside tag below is meant for desktop view and tablet view 
           <aside className="bg-background px-3 rounded-md py-3 hidden sm:block">
-            <LikeButton desktop={true} likes={post.likes} />
+            <LikeButton desktop={true}
+              likes={post.likes}
+              id={post._id.toString()}
+              usersThatLiked={post.usersThatLiked} />
           </aside>
         }
 
         <main className="flex flex-col w-full gap-y-3">
           <div className="flex justify-between w-full">
-            <Identifier dateCreated={"tea"}
+            <Identifier dateCreated={dateCreated}
               image={post.creator.image}
               username={post.creator.username} />
 
-            {/* {session?.user &&
-              (session?.user.name.replace(" ", "").toLocaleLowerCase() === username ? (
+            {session?.user &&
+              (session?.user.name.replace(" ", "").toLocaleLowerCase() === post.creator.username ? (
                 <div className="flex gap-3 items-center">
-                  <Button />
-                  <Button />
+                  <Button desktop={true} type="Delete" click={()=>popUpDelete(post._id.toString())} />
+                  <Button desktop={true} type="Edit" click={showEditBox}/>
                 </div>
               ) :
-                <Button />)
-            } */}
+                <Button desktop={true} click={showReplyBox} type="Reply" />)
+            }
 
-            <Button desktop={true} type="Reply" click={showReplyBox} />
           </div>
 
           <Contents content={post.content} />
@@ -61,19 +87,29 @@ const Post = ({ post }: { post: IPostProps }) => {
             // for sreens with smaller width
             <div className="flex sm:hidden justify-between">
               <aside className="bg-background px-4 rounded-lg py-2">
-                <LikeButton likes={post.likes} />
+                <LikeButton likes={post.likes}
+                  id={post._id.toString()}
+                  usersThatLiked={post.usersThatLiked} />
               </aside>
 
-              <Button type="Reply" click={showReplyBox}/>
+              {session?.user &&
+                (session?.user.name.replace(" ", "").toLocaleLowerCase() === post.creator.username ? (
+                  <div className="flex gap-3 items-center">
+                    <Button type="Delete" click={()=>popUpDelete(post._id.toString())} />
+                    <Button type="Edit" click={showEditBox}/>
+                  </div>
+                ) :
+                  <Button click={showReplyBox} type="Reply" />)
+              }
             </div>
           }
         </main>
       </div>
       <div className="w-full flex flex-col items-end lg:w-95% xl:-11/12 border-0 border-l-2 border-solid border-l-light-gray gap-y-4">
-      {
+        {
           reply &&
           reply.id === post._id &&
-          <Replybox/>
+          <Replybox />
         }
         {
           post.replies.map((reply) => (<Reply post={reply as IReplyProps} key={reply?._id.toString()} />))

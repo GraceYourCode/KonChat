@@ -1,16 +1,16 @@
 "use client"
 
-import { Session } from "next-auth";
 import { getProviders, signIn, signOut, useSession } from "next-auth/react"
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 
 const Navigation = () => {
   const {data: session} = useSession();
 
   const [providers, setProviders] = useState<Object | null>(null);
-  const [fixed, setFixed] = useState(false)
+  const navBar = useRef<HTMLDivElement>(null)
+  const [height, setHeight] = useState<number>();
 
   useEffect(() => {
     const setToProviders = async () => {
@@ -23,21 +23,17 @@ const Navigation = () => {
 
     setToProviders();
 
-    // if (typeof window !== 'undefined') {
-    //   // Code that uses window (only runs in the browser)
+    if (navBar.current) {
+      console.log(navBar.current.clientHeight)
+      setHeight(navBar.current?.clientHeight);
+    }
 
-    //   window.addEventListener('scroll', () => onScrollForNavigationBar(setFixed, fixed));
-
-    //   return () => {
-    //     window.removeEventListener("scroll", () => onScrollForNavigationBar(setFixed, fixed));
-    //   }
-
-    // }
-
-  }, [fixed])
+  }, [])
 
   return (
-    <nav className={`${fixed && "fixed"} bg-background text-right align-page py-3`}>
+    <>
+    <div className="w-screen bg-background" style={{height: height}}></div>
+    <nav className={`fixed bg-background text-right shadow-lg w-screen h-12 flex items-center`} ref={navBar}>
       {/**checks if user is logged in, it displays sign out
        * so the user can sign out
        */}
@@ -47,7 +43,7 @@ const Navigation = () => {
           className="rounded-full"
             width={28}
             height={28}
-            src={session?.user?.image}
+            src={session?.user.image}
             alt="profile pic" />
 
           <button className="auth" onClick={()=> signOut()}>
@@ -70,6 +66,7 @@ const Navigation = () => {
         </>
       )}
     </nav>
+    </>
   )
 }
 

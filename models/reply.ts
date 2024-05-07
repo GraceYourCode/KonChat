@@ -1,5 +1,5 @@
 import { IReply } from "@/utils/types";
-import { Schema, model, models } from "mongoose";
+import mongoose, { Schema, model, models } from "mongoose";
 
 const replySchema = new Schema<IReply> ({
   creator: {
@@ -33,7 +33,6 @@ const replySchema = new Schema<IReply> ({
     ref: "Users",
   }],
 })
-
 const Reply = models.Reply || model<IReply> ("Reply", replySchema);
 
 export default Reply;

@@ -59,10 +59,6 @@ const Textbox = () => {
     }
   }, [content]);
 
-  useEffect(() => {
-
-    // keep track of previous scroll position
-  }, [])
 
   if (!session) return (<></>);
 

@@ -68,7 +68,7 @@ export interface INewReply {
 export interface IButtonProps {
   desktop?: boolean;
   type: string;
-  click: () => void;
+  click?: () => void;
 }
 
 export interface IPostProps {
@@ -110,7 +110,7 @@ export interface IIdentifierProps {
 
 export interface IReplyState {
   id: string;
-  postId: string;
-  username: string;
+  postId?: string;
+  username?: string;
   show: boolean;
 }

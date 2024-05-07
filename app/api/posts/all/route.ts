@@ -1,12 +1,14 @@
 import Post from "@/models/post";
+import Reply from "@/models/reply";
 import { connectToDB } from "@/utils/database"
 import { IPost } from "@/utils/types";
 
-export const GET = async () => {
+export const POST = async () => {
   try {
     await connectToDB();
 
-    const allPosts: IPost[] = await Post.find().populate("creator").populate({
+    await Reply.find({});
+    const allPosts: IPost[] = await Post.find({}).populate("creator").populate({
       path: "replies",
       populate: {
         path: "creator",
