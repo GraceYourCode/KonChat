@@ -4,5 +4,4 @@ import { authOptions } from "@/lib/authOptions";
 
 const handler = NextAuth(authOptions);
 
-export const GET = (req: NextApiRequest, res: NextApiResponse) => handler(req, res);
-export const POST = (req: NextApiRequest, res: NextApiResponse) => handler(req, res);
+export { handler as GET, handler as POST };
