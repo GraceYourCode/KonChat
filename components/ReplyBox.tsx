@@ -54,7 +54,10 @@ const Replybox = () => {
   useLayoutEffect(() => {
     if (input.current) {
       input.current.style.height = 'inherit';
-      input.current.style.height = `${input.current.scrollHeight}px`;
+      // Check if scrollHeight is more than 240
+      const newHeight = input.current.scrollHeight > 240 ? 240 : input.current.scrollHeight;
+      input.current.style.height = `${newHeight}px`;
+      console.log(input.current.style.height);
     }
   }, [content]);
 

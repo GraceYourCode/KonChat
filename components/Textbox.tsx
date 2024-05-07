@@ -50,21 +50,23 @@ const Textbox = () => {
     }
   }
 
-
-
   useLayoutEffect(() => {
     if (input.current) {
       input.current.style.height = 'inherit';
-      input.current.style.height = `${input.current.scrollHeight}px`;
+      // Check if scrollHeight is more than 240
+      const newHeight = input.current.scrollHeight > 240 ? 240 : input.current.scrollHeight;
+      input.current.style.height = `${newHeight}px`;
+      console.log(input.current.style.height);
     }
   }, [content]);
+  
 
 
   if (!session) return (<></>);
 
   return (
     <div className={`${fixed && "fixed"} pb-3 md:pb-5 align-page bottom-0 bg-background z-20`}>
-      <form className="bg-white shadow-lg rounded-md flex gap-3 items-start p-5" onSubmit={(e)=>submitPost(e)}>
+      <form className="bg-white shadow-lg rounded-md flex gap-3 items-start p-5" onSubmit={(e) => submitPost(e)}>
         <Image
           alt="dp"
           src={session?.user.image as string || dp}

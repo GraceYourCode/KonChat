@@ -3,7 +3,8 @@
 import { Schema } from "mongoose";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import { FaMinus, FaPlus } from "react-icons/fa"
+import { FaMinus, FaPlus } from "react-icons/fa";
+import { FcLike, FcLikePlaceholder } from "react-icons/fc";
 
 interface likeProps {
   desktop?: boolean;
@@ -15,20 +16,16 @@ interface likeProps {
 const LikeButton: React.FC<likeProps> = ({ desktop, likes, id, usersThatLiked }) => {
   const { data: session } = useSession();
   const [liked, setLiked] = useState<boolean>(false);
+  const [like, setLike] = useState<string>();
 
-  const likeOrUnlike = async (like: string) => {
-    const bodyParams = {
-      "userId": session?.user.id,
-      "like": like,
-    }
-    console.log (bodyParams)
+  const likeOrUnlike = async () => {
     try {
       const response = await fetch(`/api/posts/${id}`, {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bodyParams),
+        body: JSON.stringify(session?.user.id),
       });
-    
+
       if (!response.ok) {
         console.log(`HTTP error! status: ${response.status}`);
       } else {
@@ -43,26 +40,45 @@ const LikeButton: React.FC<likeProps> = ({ desktop, likes, id, usersThatLiked })
     } catch (error) {
       console.error('Fetch error', error);
     }
-    
+
   }
 
   useEffect(() => {
     usersThatLiked &&
       usersThatLiked.map(each => {
-        each === session?.user.id ? setLiked(true) : setLiked(false)
+        if (each === session?.user.id) {
+          setLiked(true);
+          setLike("unlike");
+        } else {
+          setLiked(false);
+          setLike("like");
+        } 
       })
+      console.log(like)
 
-  }, [session?.user.id, usersThatLiked])
+  }, [like, session?.user.id, usersThatLiked])
 
   return (
-    <button className={`flex gap-3 items-center ${desktop && "flex-col"}`}>
-      {<FaPlus className={`${liked && "hidden"} icons`} onClick={() => likeOrUnlike("like")} />}
+    <>
+    {
+      desktop ?
+    <button className={`flex gap-3 items-center flex-col bg-background px-4 rounded-lg py-2`}>
+      {session?.user && <FaPlus className={`${liked && "hidden"} icons`} onClick={likeOrUnlike} />}
 
       <p className="font-medium text-blue">{likes}</p>
 
-      {<FaMinus className={`${!liked && "hidden"} icons`} onClick={() => likeOrUnlike("unlike")} />}
+      {session?.user && <FaMinus className={`${!liked && "hidden"} icons`} onClick={likeOrUnlike} />}
 
-    </button>
+    </button> :
+      <div className="flex items-center text-red font-medium" onClick={session?.user && likeOrUnlike}>
+        {
+          liked ? <FcLike className="text-gray-blue"/>:<FcLikePlaceholder/>
+        }
+        
+        <small>{likes}</small>
+      </div>
+    }
+    </>
   )
 }
 

@@ -53,7 +53,7 @@ const Reply = ({ post }: { post: IReplyProps }) => {
       <div className={`${edit === null ? "flex" : edit.id === post._id ? "hidden" : "flex"} bg-white w-95% p-5 rounded-md gap-4 items-start min-h-fit`}>
         {
           // this aside tag below is meant for desktop view and tablet view 
-          <aside className="bg-background px-3 rounded-md py-3 hidden sm:block">
+          <aside className="">
             <LikeButton likes={post.likes}
               id={post._id.toString()}
               desktop={true}
@@ -83,7 +83,7 @@ const Reply = ({ post }: { post: IReplyProps }) => {
           {
             // for sreens with smaller width
             <div className="flex sm:hidden justify-between">
-              <aside className="bg-background px-4 rounded-lg py-2">
+              <aside className="hidden sm:block">
                 <LikeButton likes={post.likes}
                   id={post._id.toString()}
                   usersThatLiked={post.usersThatLiked} />

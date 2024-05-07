@@ -4,7 +4,7 @@ import { connectToDB } from "@/utils/database";
 import { Schema } from "mongoose";
 
 export const POST = async (req: Request, { params }: { params: any }) => {
-  const { userId, like } = await req.json();
+  const userId = await req.json();
 
   try {
     await connectToDB();
@@ -16,7 +16,7 @@ export const POST = async (req: Request, { params }: { params: any }) => {
     if (!existingPost) return new Response(JSON.stringify("Post not found!"))
 
 
-    if (like === "like") {
+    if (!existingPost.usersThatLiked.includes(userId)) {
       existingPost.likes = existingPost.likes + 1;
       existingPost.usersThatLiked = [...existingPost.usersThatLiked, userId]
     } else {

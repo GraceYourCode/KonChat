@@ -11,6 +11,7 @@ import { useContext, useEffect, useState } from "react"
 import { myContext } from "@/utils/context"
 import Replybox from "./ReplyBox"
 import { getTimeDifference } from "@/utils/functions"
+import { FiMessageCircle } from "react-icons/fi";
 import EditBox from "./EditBox"
 
 const Post = ({ post }: { post: IPostProps }) => {
@@ -48,14 +49,14 @@ const Post = ({ post }: { post: IPostProps }) => {
     <div className="flex flex-col items-end w-full gap-4">
       {
         edit !== null &&
-        edit.id === post._id && <EditBox contentToEdit={post.content} id={post._id.toString()}/>
+        edit.id === post._id && <EditBox contentToEdit={post.content} id={post._id.toString()} />
       }
 
       <div className={`${edit === null ? "flex" : edit.id === post._id ? "hidden" : "flex"} bg-white p-5 rounded-md gap-4 items-start w-full min-h-fit`}>
 
         {
           // this aside tag below is meant for desktop view and tablet view 
-          <aside className="bg-background px-3 rounded-md py-3 hidden sm:block">
+          <aside className="hidden sm:block">
             <LikeButton desktop={true}
               likes={post.likes}
               id={post._id.toString()}
@@ -72,8 +73,8 @@ const Post = ({ post }: { post: IPostProps }) => {
             {session?.user &&
               (session?.user.name.replace(" ", "").toLocaleLowerCase() === post.creator.username ? (
                 <div className="flex gap-3 items-center">
-                  <Button desktop={true} type="Delete" click={()=>popUpDelete(post._id.toString())} />
-                  <Button desktop={true} type="Edit" click={showEditBox}/>
+                  <Button desktop={true} type="Delete" click={() => popUpDelete(post._id.toString())} />
+                  <Button desktop={true} type="Edit" click={showEditBox} />
                 </div>
               ) :
                 <Button desktop={true} click={showReplyBox} type="Reply" />)
@@ -85,18 +86,24 @@ const Post = ({ post }: { post: IPostProps }) => {
 
           {
             // for sreens with smaller width
-            <div className="flex sm:hidden justify-between">
-              <aside className="bg-background px-4 rounded-lg py-2">
+            <div className="flex sm:hidden justify-between items-center">
+              <aside className="flex items-center gap-5">
                 <LikeButton likes={post.likes}
                   id={post._id.toString()}
                   usersThatLiked={post.usersThatLiked} />
+
+                <div className="font-medium text-blue flex items-center">
+                  <FiMessageCircle className="text-lg" />
+                  <small className="">{post.replies.length}</small>
+                </div>
               </aside>
+
 
               {session?.user &&
                 (session?.user.name.replace(" ", "").toLocaleLowerCase() === post.creator.username ? (
                   <div className="flex gap-3 items-center">
-                    <Button type="Delete" click={()=>popUpDelete(post._id.toString())} />
-                    <Button type="Edit" click={showEditBox}/>
+                    <Button type="Delete" click={() => popUpDelete(post._id.toString())} />
+                    <Button type="Edit" click={showEditBox} />
                   </div>
                 ) :
                   <Button click={showReplyBox} type="Reply" />)
