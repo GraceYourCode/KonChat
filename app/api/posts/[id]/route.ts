@@ -4,7 +4,7 @@ import { connectToDB } from "@/utils/database";
 import { Schema } from "mongoose";
 
 export const POST = async (req: Request, { params }: { params: any }) => {
-  const userId = await req.json();
+  const userId: Schema.Types.ObjectId = await req.json();
 
   try {
     await connectToDB();

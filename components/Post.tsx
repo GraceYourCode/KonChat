@@ -56,7 +56,7 @@ const Post = ({ post }: { post: IPostProps }) => {
 
         {
           // this aside tag below is meant for desktop view and tablet view 
-          <aside className="hidden sm:block">
+          <aside className="hidden sm:block bg-red">
             <LikeButton desktop={true}
               likes={post.likes}
               id={post._id.toString()}

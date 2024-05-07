@@ -16,14 +16,13 @@ interface likeProps {
 const LikeButton: React.FC<likeProps> = ({ desktop, likes, id, usersThatLiked }) => {
   const { data: session } = useSession();
   const [liked, setLiked] = useState<boolean>(false);
-  const [like, setLike] = useState<string>();
 
   const likeOrUnlike = async () => {
     try {
       const response = await fetch(`/api/posts/${id}`, {
         method: "POST",
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(session?.user.id),
+        body: JSON.stringify(session?.user.id as Schema.Types.ObjectId),
       });
 
       if (!response.ok) {
@@ -48,15 +47,12 @@ const LikeButton: React.FC<likeProps> = ({ desktop, likes, id, usersThatLiked })
       usersThatLiked.map(each => {
         if (each === session?.user.id) {
           setLiked(true);
-          setLike("unlike");
         } else {
           setLiked(false);
-          setLike("like");
         } 
       })
-      console.log(like)
 
-  }, [like, session?.user.id, usersThatLiked])
+  }, [session?.user.id, usersThatLiked])
 
   return (
     <>
