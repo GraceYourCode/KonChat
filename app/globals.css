@@ -2,32 +2,49 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+* {
+  background: none;
+  outline: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  padding: 0;
+  margin: 0;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+.icons {
+  @apply text-gray-blue text-xs hover:text-blue font-medium
+}
+
+.align-page {
+  @apply w-full px-4 xs:px-6 sm:w-11/12 md:w-10/12 lg:w-3/4 xl:w-1/2 sm:px-0
+}
+
+.auth {
+  @apply text-blue cursor-pointer hover:text-gray-blue text-sm font-bold
+}
+
+.textbox {
+  @apply resize-none p-2.5 text-sm w-full h-10 xs:h-16 sm:h-20 border border-solid border-light-gray rounded-md focus:border-contents
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+*::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.action-btn {
+  @apply text-white disabled:bg-gray-blue px-5
+  py-2 bg-blue rounded-md text-sm hover:bg-gray-blue disabled:cursor-not-allowed disabled:text-xs
 }
