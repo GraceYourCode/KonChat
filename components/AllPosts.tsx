@@ -53,7 +53,7 @@ const AllPosts = () => {
           toDelete, popUpDelete,
           setShowDelete,
         }}>
-      <main className="align-page flex flex-col gap-y-4 items-center pt-3 md:pt-5">
+      <main className="align-page flex flex-col gap-y-4 items-center py-5 md:py-8">
         <>
           {posts &&
             posts.map((post: any) => (
@@ -64,7 +64,7 @@ const AllPosts = () => {
         {showDelete && <DeleteModal />}
       </main>
         </myContext.Provider>
-      <Textbox />
+      {/* <Textbox /> */}
     </div>
   )
 }

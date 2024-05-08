@@ -8,7 +8,6 @@ import { INewPost } from "@/utils/types";
 import { Schema } from "mongoose";
 
 const Textbox = () => {
-  const [fixed, setFixed] = useState<boolean>(true);
   const [content, setContent] = useState<string>("");
   let submitting: boolean = false;
   const input = useRef<HTMLTextAreaElement>(null);
@@ -65,7 +64,8 @@ const Textbox = () => {
   if (!session) return (<></>);
 
   return (
-    <div className={`${fixed && "fixed"} pb-3 md:pb-5 align-page bottom-0 bg-background z-20`}>
+    <div className={`fixed pb-3 md:pb-5 w-screen bottom-0 bg-background z-20 flex justify-center`}>
+      <div className="align-page">
       <form className="bg-white shadow-lg rounded-md flex gap-3 items-start p-5" onSubmit={(e) => submitPost(e)}>
         <Image
           alt="dp"
@@ -98,6 +98,7 @@ const Textbox = () => {
           </button>
         }
       </form>
+      </div>
     </div>
   )
 }
