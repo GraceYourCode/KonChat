@@ -4,6 +4,7 @@ import { getProviders, signIn, signOut, useSession } from "next-auth/react"
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import Textbox from "./Textbox";
 
 
 const Navigation = () => {
@@ -13,6 +14,9 @@ const Navigation = () => {
   const [providers, setProviders] = useState<Object | null>(null);
   const navBar = useRef<HTMLDivElement>(null)
   const [height, setHeight] = useState<number>();
+  const [post, setPost] = useState<boolean>(false);
+
+  const togglePost = () => setPost(prev => !prev)
 
   useEffect(() => {
     const setToProviders = async () => {
@@ -47,8 +51,10 @@ const Navigation = () => {
                 width={40}
                 height={40}
                 src={session?.user.image}
-                alt="profile pic" />
-              <button className="bg-blue px-8 py-2 text-white rounded-full hidden sm:block text-xs">Post</button>
+                alt="profile pic"
+                quality={100}/>
+
+              {pathname === "/chat" && <button className="bg-blue px-8 py-2 text-white rounded-full hidden sm:block text-xs" onClick={togglePost}>Post</button>}
             </div>
           ) : (
 
@@ -67,6 +73,7 @@ const Navigation = () => {
           )}
         </div>
       </nav>
+      <Textbox post={post} close={togglePost} />
     </>
   )
 }

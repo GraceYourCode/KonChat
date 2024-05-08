@@ -25,6 +25,8 @@ export interface IUser extends Document {
   email: string;
   username: string;
   image?: string;
+  name?: string;
+  description?: string;
 }
 
 export interface IProvider {
@@ -106,6 +108,7 @@ export interface IIdentifierProps {
   image: string;
   username: string;
   dateCreated: string;
+  id: string;
 }
 
 export interface IReplyState {

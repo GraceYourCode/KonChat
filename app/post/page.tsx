@@ -25,7 +25,7 @@ const Page = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await fetch (`/api/posts/${id}`);
+        const response = await fetch(`/api/posts/${id}`);
         const data = await response.json();
         setPost(data)
       } catch (error: any) {
@@ -46,11 +46,11 @@ const Page = () => {
         toDelete, popUpDelete,
         setShowDelete,
       }}>
-      <main className="align-page flex flex-col gap-y-4 items-center py-5 md:py-8">
-        {
-          post && <Post post={post as IPostProps} />
-        }
-        {showDelete && <DeleteModal />}
+        <main className="align-page flex flex-col gap-y-4 items-center py-5 md:py-8">
+          {
+            post && <Post post={post as IPostProps} />
+          }
+          {showDelete && <DeleteModal />}
         </main>
       </myContext.Provider>
     </div>

@@ -64,7 +64,6 @@ const AllPosts = () => {
         {showDelete && <DeleteModal />}
       </main>
         </myContext.Provider>
-      <Textbox />
     </div>
   )
 }

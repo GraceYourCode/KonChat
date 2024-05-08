@@ -40,6 +40,8 @@ export const authOptions: NextAuthOptions = {
             email: user.email,
             username: user.name.replace(" ", "").toLowerCase(),
             image: user.image,
+            name: user.name,
+            description: `I am ${user.name}. This is my profile.`,
           });
         }
 

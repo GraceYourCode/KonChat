@@ -13,7 +13,7 @@ import EditBox from "./EditBox";
 import { useSession } from "next-auth/react";
 import { Schema } from "mongoose";
 
-const Reply = ({ post, postId }: { post: IReplyProps, postId: Schema.Types.ObjectId }) => {
+const Reply = ({ post, postId }: { post: IReplyProps, postId?: Schema.Types.ObjectId }) => {
   const { data: session } = useSession();
   const { reply, setReply } = useContext(myContext);
   const { edit, setEdit } = useContext(myContext);
@@ -31,7 +31,7 @@ const Reply = ({ post, postId }: { post: IReplyProps, postId: Schema.Types.Objec
   const showReplyBox = () => {
     setReply({
       id: post._id,
-      postId: postId,
+      postId: post.postId,
       username: post.creator.username,
       show: true,
     })
@@ -65,7 +65,7 @@ const Reply = ({ post, postId }: { post: IReplyProps, postId: Schema.Types.Objec
         <main className="flex flex-col w-full gap-y-3">
           <div className="flex justify-between w-full">
             <Identifier dateCreated={dateCreated}
-              image={post.creator.image}
+              image={post.creator.image} id={post.creator._id.toString()}
               username={post.creator.username} />
 
             {session?.user &&

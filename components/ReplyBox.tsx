@@ -7,20 +7,22 @@ import { IoIosSend } from "react-icons/io";
 import { useSession } from "next-auth/react";
 import { myContext } from "@/utils/context";
 import { date } from "@/utils/functions";
+import { useRouter } from "next/navigation";
 
 
 const Replybox = () => {
   const { data: session } = useSession();
+  const router = useRouter();
   const { reply, setReply } = useContext(myContext);
   const [content, setContent] = useState<string>(reply && `@${reply.username} `);
   const input = useRef<HTMLTextAreaElement>(null);
   const form = useRef<HTMLFormElement>(null);
-  let submitting: boolean = false;
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   const submitReply = async (e: React.FormEvent<HTMLFormElement>) => {
     e.stopPropagation();
     e.preventDefault();
-    submitting = true;
+    setSubmitting(true);
 
     const newReply = {
       userId: session?.user.id,
@@ -41,6 +43,7 @@ const Replybox = () => {
       console.log(pushData)
 
       if (response.ok) {
+        router.push(`/post?id=${reply.postId}`)
         setReply(null);
         setContent("")
       };
@@ -48,7 +51,7 @@ const Replybox = () => {
     } catch (error) {
       throw error
     } finally {
-      submitting = false;
+      setSubmitting(false);
     }
   }
 
@@ -88,7 +91,7 @@ const Replybox = () => {
     {
       reply &&
       reply.show &&
-        <form onSubmit={(e) => submitReply(e)} className="bg-white shadow-lg rounded-md flex gap-3 items-start p-5 w-95%" ref={form}>
+        <form onSubmit={submitReply} className="bg-white shadow-lg rounded-md flex gap-3 items-start p-5 w-95%" ref={form} onClick={(e)=>e.stopPropagation()}>
           <Image
             alt="dp"
             src={session?.user.image || dp}

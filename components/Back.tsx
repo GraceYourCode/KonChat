@@ -1,3 +1,5 @@
+"use client"
+
 import { useRouter } from "next/navigation";
 import { IoIosArrowBack } from "react-icons/io";
 
@@ -5,7 +7,7 @@ const BackBtn = () => {
   const router = useRouter();
   return (
     <>
-      {<div className="w-screen bg-black h-16"></div>}
+      {<div className="w-screen h-16"></div>}
 
     <div className="w-screen flex justify-center fixed bg-background">
     <div className="align-page flex">

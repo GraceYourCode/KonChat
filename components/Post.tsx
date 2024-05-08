@@ -13,7 +13,6 @@ import Replybox from "./ReplyBox"
 import { getTimeDifference } from "@/utils/functions"
 import { FiMessageCircle } from "react-icons/fi";
 import EditBox from "./EditBox"
-import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 
 const Post = ({ post }: { post: IPostProps }) => {
@@ -50,13 +49,13 @@ const Post = ({ post }: { post: IPostProps }) => {
   }
 
   return (
-    <div className={`flex flex-col items-end w-full gap-4`} onClick={()=>pathname==="/chat" && router.push(`/post?id=${post._id}`)}>
+    <div className={`flex flex-col items-end w-full gap-4`} onClick={()=>pathname!=="/post" && router.push(`/post?id=${post._id}`)}>
       {
         edit !== null &&
         edit.id === post._id && <EditBox contentToEdit={post.content} id={post._id.toString()} />
       }
 
-      <div className={`${edit === null ? "flex" : edit.id === post._id ? "hidden" : "flex"} ${pathname==="/chat" && "cursor-pointer hover:shadow-md"} bg-white p-5 rounded-md gap-4 items-start w-full min-h-fit`}>
+      <div className={`${edit === null ? "flex" : edit.id === post._id ? "hidden" : "flex"} ${pathname!=="/post" && "cursor-pointer hover:shadow-md"} bg-white p-5 rounded-md gap-4 items-start w-full min-h-fit`}>
 
         {
           // this aside tag below is meant for desktop view and tablet view 
@@ -71,7 +70,7 @@ const Post = ({ post }: { post: IPostProps }) => {
         <main className="flex flex-col w-full gap-y-3">
           <div className="flex justify-between w-full">
             <Identifier dateCreated={dateCreated}
-              image={post.creator.image}
+              image={post.creator.image} id={post.creator._id.toString()}
               username={post.creator.username} />
 
             {session?.user &&

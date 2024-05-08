@@ -10,12 +10,12 @@ const EditBox = ({ contentToEdit, id }: {contentToEdit: string, id: string}) => 
   const input = useRef<HTMLTextAreaElement>(null);
   const form = useRef<HTMLFormElement>(null);
   const { setEdit } = useContext(myContext);
-  let submitting: boolean = false;
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   const submitEdit = async (e: FormEvent<HTMLFormElement>) => {
     e.stopPropagation();
     e.preventDefault();
-    submitting = true;
+    setSubmitting(true);
 
     try {
       const response = await fetch(`/api/posts/${id}`,{
@@ -26,7 +26,7 @@ const EditBox = ({ contentToEdit, id }: {contentToEdit: string, id: string}) => 
       console.log(data)
 
       if (response.ok) {
-        submitting = false;
+        setSubmitting(false);
         setEdit(null);
       }
     } catch (error: any) {
@@ -66,7 +66,7 @@ const EditBox = ({ contentToEdit, id }: {contentToEdit: string, id: string}) => 
   }, [setEdit]);
 
   return (
-    <form onSubmit={submitEdit} className="bg-white shadow-lg rounded-md flex gap-3 items-start p-5 w-full" ref={form}>
+    <form onSubmit={submitEdit} onClick={(e)=>e.stopPropagation()} className="bg-white shadow-lg rounded-md flex gap-3 items-start p-5 w-full" ref={form}>
       <Image
         alt="dp"
         src={session?.user.image || dp}

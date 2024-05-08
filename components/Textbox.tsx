@@ -1,21 +1,22 @@
 import Image from "next/image";
 import dp from '@/app/favicon.ico'
 import { IoIosSend } from "react-icons/io";
+import { MdClear } from "react-icons/md";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { date } from "@/utils/functions";
 import { useSession } from "next-auth/react";
 import { INewPost } from "@/utils/types";
 import { Schema } from "mongoose";
 
-const Textbox = () => {
-  const [content, setContent] = useState<string>("");
-  let submitting: boolean = false;
-  const input = useRef<HTMLTextAreaElement>(null);
+const Textbox = ({ post, close }: { post: boolean, close: ()=>void }) => {
   const { data: session } = useSession();
+  const [content, setContent] = useState<string>("");
+  const input = useRef<HTMLTextAreaElement>(null);
+  const [submitting, setSubmitting] = useState<boolean>(false);
 
   const submitPost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    submitting = true;
+    setSubmitting(true);
 
 
     const newPost: INewPost = {
@@ -40,12 +41,13 @@ const Textbox = () => {
       if (response.ok) {
         console.log(data, "success");
         setContent("")
+        close();
       };
 
     } catch (error) {
       console.log(error);
     } finally {
-      submitting = false;
+      setSubmitting(false);
     }
   }
 
@@ -58,48 +60,65 @@ const Textbox = () => {
       console.log(input.current.style.height);
     }
   }, [content]);
-  
+
 
 
   if (!session) return (<></>);
 
   return (
-    <div className={`fixed pb-3 md:pb-5 w-screen bottom-0 bg-background z-20 flex justify-center`}>
-      <div className="align-page">
-      <form className="bg-white shadow-lg rounded-md flex gap-3 items-start p-5" onSubmit={(e) => submitPost(e)}>
-        <Image
-          alt="dp"
-          src={session?.user.image as string || dp}
-          height={30}
-          width={30}
-          className="hidden sm:block rounded-full" />
+    <>
+      {
+        post &&
+        <>
+          <div className="fixed w-screen h-screen bg-black opacity-60 top-0 z-50"></div>
+          <div className={`fixed w-screen h-screen z-50 flex justify-center items-center`}>
+            <div className="align-page">
+              <form className="bg-white shadow-lg rounded-md p-5 relative flex flex-col gap-4" onSubmit={(e) => submitPost(e)}>
+                <MdClear className="text-2xl cursor-pointer" onClick={close}/>
+                <div className="flex gap-3 items-start">
+                  <Image
+                    alt="dp"
+                    src={session?.user.image as string || dp}
+                    height={40}
+                    width={40}
+                    className="rounded-full" />
 
-        <textarea value={content} required disabled={submitting} ref={input}
-          onChange={
-            (e) => {
-              /* this takes the contents imputed by the user and stores
-              it inside the container "content"*/
-              setContent(e.target.value)
-            }
-          }
-          className="textbox" />
+                  <div className="flex flex-col justify-end items-end w-full gap-3">
+                    <textarea value={content} required disabled={submitting} ref={input}
+                      onChange={
+                        (e) => {
+                          /* this takes the contents imputed by the user and stores
+                          it inside the container "content"*/
+                          setContent(e.target.value)
+                        }
+                      } placeholder="What's the trend?"
+                      style={{
+                        border: "none",
+                        padding: 0
+                      }}
+                      className="textbox " />
 
-        {
-          //send button for desktop view
-          <button type="submit" className="action-btn hidden xl:block"
-            disabled={submitting}>
-            {submitting ? `SENDING...` : `SEND`}
-          </button>
-        }
-        {
-          //send btn for tablet and mobile view 
-          <button className="text-blue xl:hidden text-3xl sm:text-4xl">
-            <IoIosSend />
-          </button>
-        }
-      </form>
-      </div>
-    </div>
+                    {
+                      //send button for desktop view
+                      <button type="submit" className="action-btn hidden xl:block"
+                        disabled={submitting}>
+                        {submitting ? `SENDING...` : `SEND`}
+                      </button>
+                    }
+                    {
+                      //send btn for tablet and mobile view 
+                      <button className="text-blue xl:hidden text-3xl sm:text-4xl">
+                        <IoIosSend />
+                      </button>
+                    }
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </>
+      }
+    </>
   )
 }
 

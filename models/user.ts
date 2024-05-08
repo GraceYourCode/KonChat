@@ -14,6 +14,14 @@ const userSchema = new Schema<IUser>({
   },
   image: {
     type: String,
+  },
+  name: {
+    type: String,
+    required: [true, "Name is required!"]
+  },
+  description: {
+    type: String,
+    required: [true, "description is required!"]
   }
 })
 
