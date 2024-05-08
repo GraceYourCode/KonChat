@@ -6,7 +6,7 @@ import Post from '@/components/Post';
 import { myContext } from "@/utils/context"
 import { IPostProps, IReplyState } from '@/utils/types';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 
 const PostPage = () => {
   const searchParams = useSearchParams()
@@ -37,6 +37,7 @@ const PostPage = () => {
   }, [id])
 
   return (
+    <Suspense>
     <div className='w-screen flex flex-col items-center min-h-screen'>
       <BackBtn />
       <myContext.Provider value={{
@@ -54,6 +55,7 @@ const PostPage = () => {
         </main>
       </myContext.Provider>
     </div>
+    </Suspense>
   )
 }
 
