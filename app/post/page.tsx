@@ -8,7 +8,7 @@ import { IPostProps, IReplyState } from '@/utils/types';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
 
-const PostPage = () => {
+const Page = () => {
   const searchParams = useSearchParams()
   const id = searchParams.get("id");
   const [post, setPost] = useState<IPostProps>();
@@ -37,7 +37,6 @@ const PostPage = () => {
   }, [id])
 
   return (
-    <Suspense>
     <div className='w-screen flex flex-col items-center min-h-screen'>
       <BackBtn />
       <myContext.Provider value={{
@@ -55,6 +54,13 @@ const PostPage = () => {
         </main>
       </myContext.Provider>
     </div>
+  )
+}
+
+const PostPage = () => {
+  return (
+    <Suspense>
+      <Page />
     </Suspense>
   )
 }
