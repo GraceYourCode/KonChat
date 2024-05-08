@@ -20,13 +20,13 @@ const DemoPosts = () => {
     }
 
     fetchPosts();
-  }, [])
+  }, [id])
 
   return (
     <div className="flex flex-col gap-y-4 items-center py-5 md:py-8">
       {
         posts && 
-        posts.map(post => <Post post={post}/>)
+        posts.map(post => <Post post={post} key={post._id.toString()}/>)
       }
     </div>
   )

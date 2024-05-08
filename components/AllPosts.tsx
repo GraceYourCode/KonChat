@@ -56,8 +56,8 @@ const AllPosts = () => {
       <main className="align-page flex flex-col gap-y-4 items-center py-5 md:py-8">
         <>
           {posts &&
-            posts.map((post: any) => (
-              <Post post={post} key={post._id}/>
+            posts.map((post) => (
+              <Post post={post} key={post._id.toString()}/>
             ))
           }
         </>
