@@ -13,9 +13,13 @@ import Replybox from "./ReplyBox"
 import { getTimeDifference } from "@/utils/functions"
 import { FiMessageCircle } from "react-icons/fi";
 import EditBox from "./EditBox"
+import Link from "next/link"
+import { usePathname, useRouter } from "next/navigation"
 
 const Post = ({ post }: { post: IPostProps }) => {
   const { data: session } = useSession();
+  const pathname = usePathname();
+  const router = useRouter();
   const { reply, setReply } = useContext(myContext);
   const { edit, setEdit } = useContext(myContext);
   const { popUpDelete } = useContext(myContext);
@@ -46,13 +50,13 @@ const Post = ({ post }: { post: IPostProps }) => {
   }
 
   return (
-    <div className="flex flex-col items-end w-full gap-4">
+    <div className={`flex flex-col items-end w-full gap-4`} onClick={()=>pathname==="/chat" && router.push(`/post?id=${post._id}`)}>
       {
         edit !== null &&
         edit.id === post._id && <EditBox contentToEdit={post.content} id={post._id.toString()} />
       }
 
-      <div className={`${edit === null ? "flex" : edit.id === post._id ? "hidden" : "flex"} bg-white p-5 rounded-md gap-4 items-start w-full min-h-fit`}>
+      <div className={`${edit === null ? "flex" : edit.id === post._id ? "hidden" : "flex"} ${pathname==="/chat" && "cursor-pointer hover:shadow-md"} bg-white p-5 rounded-md gap-4 items-start w-full min-h-fit`}>
 
         {
           // this aside tag below is meant for desktop view and tablet view 
@@ -82,7 +86,7 @@ const Post = ({ post }: { post: IPostProps }) => {
 
           </div>
 
-          <Contents content={post.content} />
+          <Contents content={post.content} id={post._id.toString()}/>
 
           {
             // for sreens with smaller width
@@ -92,7 +96,7 @@ const Post = ({ post }: { post: IPostProps }) => {
                   id={post._id.toString()}
                   usersThatLiked={post.usersThatLiked} />
 
-                <div className="font-medium text-blue flex items-center">
+                <div className="font-medium text-blue flex items-center cursor-pointer">
                   <FiMessageCircle className="text-lg" />
                   <small className="">{post.replies.length}</small>
                 </div>
@@ -118,8 +122,8 @@ const Post = ({ post }: { post: IPostProps }) => {
           reply.id === post._id &&
           <Replybox />
         }
-        {
-          post.replies.map((reply) => (<Reply post={reply as IReplyProps} key={reply?._id.toString()} />))
+        {pathname === "/post" &&
+          post.replies.map((reply) => (<Reply post={reply as IReplyProps} postId={post._id} key={reply?._id.toString()} />))
         }
       </div>
     </div>

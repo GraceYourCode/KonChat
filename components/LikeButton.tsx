@@ -2,7 +2,7 @@
 
 import { Schema } from "mongoose";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { FcLike, FcLikePlaceholder } from "react-icons/fc";
 
@@ -17,7 +17,8 @@ const LikeButton: React.FC<likeProps> = ({ desktop, likes, id, usersThatLiked })
   const { data: session } = useSession();
   const [liked, setLiked] = useState<boolean>(false);
 
-  const likeOrUnlike = async () => {
+  const likeOrUnlike = async (e: MouseEvent<HTMLElement | SVGElement>) => {
+    e.stopPropagation();
     try {
       const response = await fetch(`/api/posts/${id}`, {
         method: "POST",
@@ -44,13 +45,8 @@ const LikeButton: React.FC<likeProps> = ({ desktop, likes, id, usersThatLiked })
 
   useEffect(() => {
     usersThatLiked &&
-      usersThatLiked.map(each => {
-        if (each === session?.user.id) {
-          setLiked(true);
-        } else {
-          setLiked(false);
-        } 
-      })
+      usersThatLiked.includes(session?.user.id as Schema.Types.ObjectId) ?
+      setLiked(true) : setLiked(false);
 
   }, [session?.user.id, usersThatLiked])
 
@@ -66,7 +62,7 @@ const LikeButton: React.FC<likeProps> = ({ desktop, likes, id, usersThatLiked })
       {session?.user && <FaMinus className={`${!liked && "hidden"} icons`} onClick={likeOrUnlike} />}
 
     </button> :
-      <div className="flex items-center text-red font-medium" onClick={session?.user && likeOrUnlike}>
+      <div className="flex items-center text-red font-medium cursor-pointer" onClick={likeOrUnlike}>
         {
           liked ? <FcLike className="text-gray-blue"/>:<FcLikePlaceholder/>
         }

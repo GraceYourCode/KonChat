@@ -13,6 +13,7 @@ const EditBox = ({ contentToEdit, id }: {contentToEdit: string, id: string}) => 
   let submitting: boolean = false;
 
   const submitEdit = async (e: FormEvent<HTMLFormElement>) => {
+    e.stopPropagation();
     e.preventDefault();
     submitting = true;
 
@@ -88,7 +89,10 @@ const EditBox = ({ contentToEdit, id }: {contentToEdit: string, id: string}) => 
 
         <div className="flex gap-3">
           <button className="text-white bg-contents py-2 px-5 text-sm rounded-md" type="button"
-            onClick={() => setEdit(null)}>
+            onClick={(e) => {
+              e.stopPropagation();
+              setEdit(null);
+            }}>
             CANCEL
           </button>
           <button type="submit" className="action-btn"

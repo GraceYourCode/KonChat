@@ -1,25 +1,21 @@
 "use client"
 
-import Identifier from "./Identifier";
-import Contents from "./Contents";
-import LikeButton from "./LikeButton";
-import Button from "./Button";
-import { IReplyProps, IReplyState } from "@/utils/types";
-import { useContext, useEffect, useState } from "react";
-import { myContext } from "@/utils/context";
-import Replybox from "./ReplyBox";
-import { getTimeDifference } from "@/utils/functions";
-import EditBox from "./EditBox";
-import { useSession } from "next-auth/react";
-import { Schema } from "mongoose";
+import { useSession } from "next-auth/react"
+import Button from "./Button"
+import Contents from "./Contents"
+import Identifier from "./Identifier"
+import LikeButton from "./LikeButton"
+import Reply from "./Reply"
+import { IPostProps, IReplyProps } from "@/utils/types"
+import { useContext, useEffect, useState } from "react"
+import { myContext } from "@/utils/context"
+import Replybox from "./ReplyBox"
+import { getTimeDifference } from "@/utils/functions"
+import { FiMessageCircle } from "react-icons/fi";
+import EditBox from "./EditBox"
 
-const Reply = ({ post, postId }: { post: IReplyProps, postId: Schema.Types.ObjectId }) => {
+const DetailedPost = ({post}: {post: IPostProps}) => {
   const { data: session } = useSession();
-  const { reply, setReply } = useContext(myContext);
-  const { edit, setEdit } = useContext(myContext);
-  const { popUpDelete } = useContext(myContext);
-  const [dateCreated, setDateCreated] = useState<string>("");
-
   useEffect(() => {
     const getDateCreated = async () => {
       const date = await getTimeDifference(post.dateCreated);
@@ -31,7 +27,7 @@ const Reply = ({ post, postId }: { post: IReplyProps, postId: Schema.Types.Objec
   const showReplyBox = () => {
     setReply({
       id: post._id,
-      postId: postId,
+      postId: post._id,
       username: post.creator.username,
       show: true,
     })
@@ -43,21 +39,21 @@ const Reply = ({ post, postId }: { post: IReplyProps, postId: Schema.Types.Objec
       show: true,
     })
   }
-
   return (
-    <>
-      {
+    <div className="flex flex-col items-end w-full gap-4">
+      {/* {
         edit !== null &&
         edit.id === post._id && <EditBox contentToEdit={post.content} id={post._id.toString()} />
-      }
+      } */}
 
-      <div className={`${edit === null ? "flex" : edit.id === post._id ? "hidden" : "flex"} bg-white w-95% p-5 rounded-md gap-4 items-start min-h-fit`}>
+      <div className={`${edit === null ? "flex" : edit.id === post._id ? "hidden" : "flex"} bg-white p-5 rounded-md gap-4 items-start w-full min-h-fit`}>
+
         {
           // this aside tag below is meant for desktop view and tablet view 
           <aside className="hidden sm:flex">
-            <LikeButton likes={post.likes}
+            <LikeButton desktop={true}
+              likes={post.likes}
               id={post._id.toString()}
-              desktop={true}
               usersThatLiked={post.usersThatLiked} />
           </aside>
         }
@@ -71,29 +67,36 @@ const Reply = ({ post, postId }: { post: IReplyProps, postId: Schema.Types.Objec
             {session?.user &&
               (session?.user.name.replace(" ", "").toLocaleLowerCase() === post.creator.username ? (
                 <div className="flex gap-3 items-center">
-                  <Button desktop={true} type="Delete" click={()=>popUpDelete(post._id.toString())}/>
+                  <Button desktop={true} type="Delete" click={() => popUpDelete(post._id.toString())} />
                   <Button desktop={true} type="Edit" click={showEditBox} />
                 </div>
               ) :
                 <Button desktop={true} click={showReplyBox} type="Reply" />)
             }
+
           </div>
 
           <Contents content={post.content} />
 
           {
             // for sreens with smaller width
-            <div className="flex sm:hidden justify-between">
-              <aside className="">
+            <div className="flex sm:hidden justify-between items-center">
+              <aside className="flex items-center gap-5">
                 <LikeButton likes={post.likes}
                   id={post._id.toString()}
                   usersThatLiked={post.usersThatLiked} />
+
+                <div className="font-medium text-blue flex items-center">
+                  <FiMessageCircle className="text-lg" />
+                  <small className="">{post.replies.length}</small>
+                </div>
               </aside>
+
 
               {session?.user &&
                 (session?.user.name.replace(" ", "").toLocaleLowerCase() === post.creator.username ? (
                   <div className="flex gap-3 items-center">
-                    <Button type="Delete" click={()=>popUpDelete(post._id.toString())} />
+                    <Button type="Delete" click={() => popUpDelete(post._id.toString())} />
                     <Button type="Edit" click={showEditBox} />
                   </div>
                 ) :
@@ -103,13 +106,18 @@ const Reply = ({ post, postId }: { post: IReplyProps, postId: Schema.Types.Objec
           }
         </main>
       </div>
-      {
-        reply &&
-        reply.id === post._id &&
-        <Replybox />
-      }
-    </>
+      <div className="w-full flex flex-col items-end lg:w-95% xl:-11/12 border-0 border-l-2 border-solid border-l-light-gray gap-y-4">
+        {
+          reply &&
+          reply.id === post._id &&
+          <Replybox />
+        }
+        {/* {
+          post.replies.map((reply) => (<Reply post={reply as IReplyProps} key={reply?._id.toString()} />))
+        } */}
+      </div>
+    </div>
   )
 }
 
-export default Reply
+export default DetailedPost

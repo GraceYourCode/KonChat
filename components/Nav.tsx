@@ -2,11 +2,13 @@
 
 import { getProviders, signIn, signOut, useSession } from "next-auth/react"
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 
 const Navigation = () => {
   const { data: session } = useSession();
+  const pathname = usePathname();
 
   const [providers, setProviders] = useState<Object | null>(null);
   const navBar = useRef<HTMLDivElement>(null)
@@ -16,9 +18,7 @@ const Navigation = () => {
     const setToProviders = async () => {
       const response = await getProviders();
 
-      setProviders(response)
-      console.log(response);
-
+      setProviders(response);
     }
 
     setToProviders();
@@ -33,7 +33,7 @@ const Navigation = () => {
   return (
     <>
       <div className="w-screen bg-background" style={{ height: height }}></div>
-      <nav className={`fixed bg-background shadow-lg w-screen h-12 flex items-center justify-center`} ref={navBar}>
+      <nav className={`fixed bg-background shadow-lg w-screen h-12 flex items-center justify-center z-50`} ref={navBar}>
         <div className="align-page">
 
           {/**checks if user is logged in, it displays sign out
@@ -41,7 +41,6 @@ const Navigation = () => {
        */}
           {session?.user ? (
             <div className="flex items-center gap-6">
-              <button className="bg-blue px-8 py-2 text-white rounded-full">Post</button>
 
               <Image
                 className="rounded-full"
@@ -49,6 +48,7 @@ const Navigation = () => {
                 height={40}
                 src={session?.user.image}
                 alt="profile pic" />
+              <button className="bg-blue px-8 py-2 text-white rounded-full hidden sm:block text-xs">Post</button>
             </div>
           ) : (
 

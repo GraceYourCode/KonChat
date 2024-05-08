@@ -68,7 +68,7 @@ export interface INewReply {
 export interface IButtonProps {
   desktop?: boolean;
   type: string;
-  click?: () => void;
+  click: () => void;
 }
 
 export interface IPostProps {

@@ -18,6 +18,7 @@ const Replybox = () => {
   let submitting: boolean = false;
 
   const submitReply = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.stopPropagation();
     e.preventDefault();
     submitting = true;
 

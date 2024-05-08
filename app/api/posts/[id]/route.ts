@@ -1,6 +1,7 @@
 import Post from "@/models/post";
 import Reply from "@/models/reply";
 import { connectToDB } from "@/utils/database";
+import { IPost } from "@/utils/types";
 import { Schema } from "mongoose";
 
 export const POST = async (req: Request, { params }: { params: any }) => {
@@ -67,5 +68,25 @@ export const DELETE = async (req: Request, { params }: {params: any}) => {
     return new Response(JSON.stringify(postToDelete))
   } catch (error: any) {
     return new Response(JSON.stringify(error.message))
+  }
+}
+
+export const GET = async (req: Request, {params}: {params: any}) => {
+  try {
+    await connectToDB();
+
+    await Reply.find({});
+    const post: IPost = await Post.findById(params.id).populate("creator").populate({
+      path: "replies",
+      populate: {
+        path: "creator",
+        model: "Users",
+      }
+    }).sort({likes: -1});
+
+
+    return new Response(JSON.stringify(post));
+  } catch (error: any) {
+    return new Response(JSON.stringify(error.message));
   }
 }
