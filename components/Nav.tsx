@@ -54,7 +54,7 @@ const Navigation = () => {
                 alt="profile pic"
                 quality={100}/>
 
-              {pathname === "/chat" && <button className="bg-blue px-8 py-2 text-white rounded-full hidden sm:block text-xs" onClick={togglePost}>Post</button>}
+              {pathname === "/" && <button className="bg-blue px-8 py-2 text-white rounded-full hidden sm:block text-xs" onClick={togglePost}>Post</button>}
             </div>
           ) : (
 

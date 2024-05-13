@@ -12,9 +12,12 @@ import { getTimeDifference } from "@/utils/functions";
 import EditBox from "./EditBox";
 import { useSession } from "next-auth/react";
 import { Schema } from "mongoose";
+import { usePathname, useRouter } from "next/navigation";
 
-const Reply = ({ post, postId }: { post: IReplyProps, postId?: Schema.Types.ObjectId }) => {
+const Reply = ({ post }: { post: IReplyProps}) => {
   const { data: session } = useSession();
+  const pathname = usePathname();
+  const router = useRouter();
   const { reply, setReply } = useContext(myContext);
   const { edit, setEdit } = useContext(myContext);
   const { popUpDelete } = useContext(myContext);
@@ -51,7 +54,8 @@ const Reply = ({ post, postId }: { post: IReplyProps, postId?: Schema.Types.Obje
         edit.id === post._id && <EditBox contentToEdit={post.content} id={post._id.toString()} />
       }
 
-      <div className={`${edit === null ? "flex" : edit.id === post._id ? "hidden" : "flex"} bg-white w-95% p-5 rounded-md gap-4 items-start min-h-fit`}>
+      <div className={`${edit === null ? "flex" : edit.id === post._id ? "hidden" : "flex"} ${pathname!=="/post" ? "cursor-pointer hover:shadow-md w-full" : "w-95%"} bg-white p-5 rounded-md gap-4 items-start min-h-fit`}
+      onClick={()=>pathname!=="/post" && router.push(`/post?id=${post.postId}`)}>
         {
           // this aside tag below is meant for desktop view and tablet view 
           <aside className="hidden sm:flex">
@@ -79,7 +83,7 @@ const Reply = ({ post, postId }: { post: IReplyProps, postId?: Schema.Types.Obje
             }
           </div>
 
-          <Contents content={post.content} />
+          <Contents content={post.content} replyingTo={post.replyingTo} id={post.postId.toString()}/>
 
           {
             // for sreens with smaller width

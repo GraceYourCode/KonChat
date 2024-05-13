@@ -85,7 +85,7 @@ const Post = ({ post }: { post: IPostProps }) => {
 
           </div>
 
-          <Contents content={post.content} id={post._id.toString()}/>
+          <Contents content={post.content}/>
 
           {
             // for sreens with smaller width
@@ -122,7 +122,7 @@ const Post = ({ post }: { post: IPostProps }) => {
           <Replybox />
         }
         {pathname === "/post" &&
-          post.replies.map((reply) => (<Reply post={reply as IReplyProps} postId={post._id} key={reply?._id.toString()} />))
+          post.replies.map((reply) => (<Reply post={reply as IReplyProps} key={reply?._id.toString()} />))
         }
       </div>
     </div>

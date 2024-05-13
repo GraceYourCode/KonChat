@@ -5,6 +5,8 @@ import { myContext } from "@/utils/context"
 import UsersPosts from "./UsersPosts"
 import { IPostProps, IReplyState } from "@/utils/types";
 import DeleteModal from "./DeleteModal";
+import UserReplies from "./UserReplies";
+import UserLikes from "./UserLikes";
 
 const options: string[] = ["Posts", "Replies", "Likes"]
 const ProfileContents = () => {
@@ -38,7 +40,9 @@ const ProfileContents = () => {
           }
 
         </header>
-        <UsersPosts />
+        {active === "Posts" && <UsersPosts />}
+        {active === "Replies" && <UserReplies />}
+        {active === "Likes" && <UserLikes />}
         {showDelete && <DeleteModal />}
       </div>
     </myContext.Provider>

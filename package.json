@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "ably": "^2.0.4",
     "mongodb": "^6.6.0",
     "mongoose": "^8.3.3",
     "next": "14.2.3",
