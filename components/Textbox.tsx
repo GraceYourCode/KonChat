@@ -2,13 +2,14 @@ import Image from "next/image";
 import dp from '@/app/favicon.ico'
 import { IoIosSend } from "react-icons/io";
 import { MdClear } from "react-icons/md";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { date } from "@/utils/functions";
 import { useSession } from "next-auth/react";
 import { INewPost } from "@/utils/types";
 import { Schema } from "mongoose";
+import pubnub from "@/utils/pubnub";
 
-const Textbox = ({ post, close }: { post: boolean, close: ()=>void }) => {
+const Textbox = ({ post, close }: { post: boolean, close: () => void }) => {
   const { data: session } = useSession();
   const [content, setContent] = useState<string>("");
   const input = useRef<HTMLTextAreaElement>(null);
@@ -40,8 +41,12 @@ const Textbox = ({ post, close }: { post: boolean, close: ()=>void }) => {
       //re-routes to home page
       if (response.ok) {
         console.log(data, "success");
-        setContent("")
+        setContent("");
         close();
+        pubnub.publish({
+          channel: "posts",
+          message: { sender: pubnub.getUUID(), content: data },
+        })
       };
 
     } catch (error) {
@@ -74,7 +79,7 @@ const Textbox = ({ post, close }: { post: boolean, close: ()=>void }) => {
           <div className={`fixed w-screen h-screen z-50 flex justify-center items-center`}>
             <div className="align-page">
               <form className="bg-white shadow-lg rounded-md p-5 relative flex flex-col gap-4" onSubmit={(e) => submitPost(e)}>
-                <MdClear className="text-2xl cursor-pointer" onClick={close}/>
+                <MdClear className="text-2xl cursor-pointer" onClick={close} />
                 <div className="flex gap-3 items-start">
                   <Image
                     alt="dp"
@@ -95,7 +100,7 @@ const Textbox = ({ post, close }: { post: boolean, close: ()=>void }) => {
                       style={{
                         border: "none",
                         padding: 0
-                      }}
+                      }} autoFocus
                       className="textbox " />
 
                     {

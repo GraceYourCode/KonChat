@@ -1,5 +1,6 @@
 "use client"
 
+import pubnub from "@/utils/pubnub";
 import { Schema } from "mongoose";
 import { useSession } from "next-auth/react";
 import { MouseEvent, useEffect, useState } from "react";
@@ -13,7 +14,7 @@ interface likeProps {
   usersThatLiked: Array<Schema.Types.ObjectId | null>;
 }
 
-const LikeButton: React.FC<likeProps> = ({ desktop, likes, id, usersThatLiked }) => {
+const LikeButton: React.FC<likeProps> = ({ likes, id, usersThatLiked }) => {
   const { data: session } = useSession();
   const [liked, setLiked] = useState<boolean>(false);
 
@@ -33,6 +34,10 @@ const LikeButton: React.FC<likeProps> = ({ desktop, likes, id, usersThatLiked })
           const data = await response.json();
           console.log(data);
           setLiked(prev => !prev);
+          pubnub.publish({
+            channel: "likes",
+            message: { sender: pubnub.getUUID(), content: data },
+          })
         } catch (error) {
           console.error('Error parsing JSON', error);
         }
@@ -53,21 +58,12 @@ const LikeButton: React.FC<likeProps> = ({ desktop, likes, id, usersThatLiked })
   return (
     <>
     {
-      desktop ?
-    <button className={`flex gap-3 items-center flex-col bg-background px-4 rounded-lg py-2`}>
-      {session?.user && <FaPlus className={`${liked && "hidden"} icons`} onClick={likeOrUnlike} />}
-
-      <p className="font-medium text-blue">{likes}</p>
-
-      {session?.user && <FaMinus className={`${!liked && "hidden"} icons`} onClick={likeOrUnlike} />}
-
-    </button> :
-      <div className="flex items-center text-red font-medium cursor-pointer" onClick={likeOrUnlike}>
+      <div className="flex items-center w-10 h-10 rounded-full hover:bg-pink-100 justify-center text-red font-medium text-xl cursor-pointer" onClick={likeOrUnlike}>
         {
-          liked ? <FcLike className="text-gray-blue"/>:<FcLikePlaceholder/>
+          liked ? <FcLike/>:<FcLikePlaceholder/>
         }
         
-        <small>{likes}</small>
+        <p className="text-sm">{likes}</p>
       </div>
     }
     </>

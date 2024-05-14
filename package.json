@@ -9,19 +9,22 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "ably": "^2.0.4",
     "mongodb": "^6.6.0",
     "mongoose": "^8.3.3",
     "next": "14.2.3",
     "next-auth": "^4.24.7",
+    "pubnub": "^8.0.1",
     "react": "^18",
     "react-dom": "^18",
-    "react-icons": "^5.2.0"
+    "react-icons": "^5.2.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/pubnub": "^7.4.2",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/uuid": "^9.0.8",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "postcss": "^8",

@@ -13,7 +13,7 @@ export const POST = async (req: Request) => {
       content,
       likes, 
       dateCreated
-    });
+    }).populate("creator");
     console.log(newPost);
 
     await newPost.save();

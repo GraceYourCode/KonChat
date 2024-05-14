@@ -49,24 +49,13 @@ const Post = ({ post }: { post: IPostProps }) => {
   }
 
   return (
-    <div className={`flex flex-col items-end w-full gap-4`} onClick={()=>pathname!=="/post" && router.push(`/post?id=${post._id}`)}>
+    <div className={`flex flex-col items-end w-full gap-4`} onClick={() => pathname !== "/post" && router.push(`/post?id=${post._id}`)}>
       {
         edit !== null &&
         edit.id === post._id && <EditBox contentToEdit={post.content} id={post._id.toString()} />
       }
 
-      <div className={`${edit === null ? "flex" : edit.id === post._id ? "hidden" : "flex"} ${pathname!=="/post" && "cursor-pointer hover:shadow-md"} bg-white p-5 rounded-md gap-4 items-start w-full min-h-fit`}>
-
-        {
-          // this aside tag below is meant for desktop view and tablet view 
-          <aside className="hidden sm:flex">
-            <LikeButton desktop={true}
-              likes={post.likes}
-              id={post._id.toString()}
-              usersThatLiked={post.usersThatLiked} />
-          </aside>
-        }
-
+      <div className={`${edit === null ? "flex" : edit.id === post._id ? "hidden" : "flex"} ${pathname !== "/post" && "cursor-pointer hover:shadow-md"} bg-white p-5 rounded-md gap-4 items-start w-full min-h-fit`}>
         <main className="flex flex-col w-full gap-y-3">
           <div className="flex justify-between w-full">
             <Identifier dateCreated={dateCreated}
@@ -85,23 +74,23 @@ const Post = ({ post }: { post: IPostProps }) => {
 
           </div>
 
-          <Contents content={post.content}/>
+          <Contents content={post.content} />
 
           {
             // for sreens with smaller width
-            <div className="flex sm:hidden justify-between items-center">
+            <div className="flex justify-between items-center">
               <aside className="flex items-center gap-5">
                 <LikeButton likes={post.likes}
                   id={post._id.toString()}
                   usersThatLiked={post.usersThatLiked} />
 
-                <div className="font-medium text-blue flex items-center cursor-pointer">
+                <div className="font-medium text-blue flex items-center cursor-pointer w-10 h-10 hover:bg-gray-blue justify-center rounded-full">
                   <FiMessageCircle className="text-lg" />
                   <small className="">{post.replies.length}</small>
                 </div>
               </aside>
 
-
+<div className="sm:hidden">
               {session?.user &&
                 (session?.user.name.replace(" ", "").toLocaleLowerCase() === post.creator.username ? (
                   <div className="flex gap-3 items-center">
@@ -111,6 +100,7 @@ const Post = ({ post }: { post: IPostProps }) => {
                 ) :
                   <Button click={showReplyBox} type="Reply" />)
               }
+</div>
             </div>
           }
         </main>
