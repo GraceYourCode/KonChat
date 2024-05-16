@@ -11,7 +11,13 @@ export const POST = async (req: Request, { params }: { params: any }) => {
     await connectToDB();
 
     // get the post from either the post or reply collection in the database which is to be updated.
-    const existingPost = await Post.findById(params.id).populate("creator") ||
+    const existingPost = await Post.findById(params.id).populate("creator").populate({
+      path: "replies",
+      populate: {
+        path: "creator",
+        model: "Users",
+      }
+    }) ||
       await Reply.findById(params.id).populate("creator");
 
     if (!existingPost) return new Response(JSON.stringify("Post not found!"))
@@ -41,7 +47,7 @@ export const PATCH = async (req: Request, { params }: { params: any }) => {
   try {
     await connectToDB();
 
-    const postToUpdate = await Post.findById(params.id) || await Reply.findById(params.id);
+    const postToUpdate = await Post.findById(params.id).populate("creator") || await Reply.findById(params.id).populate("creator");
 
     if (!postToUpdate) return new Response(JSON.stringify("Post not found!!"))
 
@@ -57,13 +63,19 @@ export const PATCH = async (req: Request, { params }: { params: any }) => {
 }
 
 export const DELETE = async (req: Request, { params }: {params: any}) => {
-  console.log(params)
   try {
     await connectToDB();
 
     const postToDelete = await Post.findByIdAndDelete(params.id) || await Reply.findByIdAndDelete(params.id);
 
     if (!postToDelete) return new Response(JSON.stringify("Post not found!!"))
+
+      if ("postId" in postToDelete) {
+        const post = await Post.findById(postToDelete.postId);
+        post.replies = post.replies.filter((reply: any) => reply.toString() !== postToDelete._id.toString())
+        console.log(post)
+        await post.save();
+      } else await Reply.deleteMany({postId: postToDelete._id})
 
     return new Response(JSON.stringify(postToDelete))
   } catch (error: any) {

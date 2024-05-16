@@ -12,8 +12,6 @@ export const GET = async (req: Request, { params }: { params: any }) => {
     const userReplies = await Reply.find({ usersThatLiked: userId }).populate("creator");
     const userPosts = await Post.find({usersThatLiked: userId}).populate("creator");
 
-    console.log(userReplies, userPosts);
-
     return new Response (JSON.stringify([...userReplies, ...userPosts]));
   } catch (error: any) {
     return new Response (JSON.stringify(error.message));

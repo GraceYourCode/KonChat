@@ -11,7 +11,6 @@ import UserLikes from "./UserLikes";
 const options: string[] = ["Posts", "Replies", "Likes"]
 const ProfileContents = () => {
   const [reply, setReply] = useState<IReplyState | null>(null);
-  const [posts, setPosts] = useState<IPostProps[]>();
   const [edit, setEdit] = useState<IReplyState | null>(null);
   const [toDelete, setToDelete] = useState<string | null>(null);
   const [showDelete, setShowDelete] = useState<boolean>(false);
@@ -24,7 +23,6 @@ const ProfileContents = () => {
 
   return (
     <myContext.Provider value={{
-      posts, setPosts,
       reply, setReply,
       edit, setEdit,
       toDelete, popUpDelete,

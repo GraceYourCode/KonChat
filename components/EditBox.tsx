@@ -3,14 +3,16 @@ import Image from "next/image";
 import dp from '@/app/favicon.ico'
 import { FormEvent, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { myContext } from "@/utils/context";
+import pubnub from "@/utils/pubnub";
 
-const EditBox = ({ contentToEdit, id }: {contentToEdit: string, id: string}) => {
+const EditBox = ({ contentToEdit, id }: { contentToEdit: string, id: string }) => {
   const { data: session } = useSession();
   const [content, setContent] = useState<string>(contentToEdit);
   const input = useRef<HTMLTextAreaElement>(null);
   const form = useRef<HTMLFormElement>(null);
   const { setEdit } = useContext(myContext);
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [failed, setFailed] = useState<boolean>(false);
 
   const submitEdit = async (e: FormEvent<HTMLFormElement>) => {
     e.stopPropagation();
@@ -18,7 +20,7 @@ const EditBox = ({ contentToEdit, id }: {contentToEdit: string, id: string}) => 
     setSubmitting(true);
 
     try {
-      const response = await fetch(`/api/posts/${id}`,{
+      const response = await fetch(`/api/posts/${id}`, {
         method: "PATCH",
         body: JSON.stringify(content),
       })
@@ -26,8 +28,19 @@ const EditBox = ({ contentToEdit, id }: {contentToEdit: string, id: string}) => 
       console.log(data)
 
       if (response.ok) {
-        setSubmitting(false);
-        setEdit(null);
+        if (typeof data !== "object") {
+          setFailed(true)
+          setTimeout(() => {
+            setFailed(false)
+          }, 1000);
+        } else {
+          setSubmitting(false);
+          setEdit(null);
+          pubnub.publish({
+            channel: "edit",
+            message: { sender: pubnub.getUUID(), content: data },
+          })
+        }
       }
     } catch (error: any) {
       console.log(error)
@@ -66,7 +79,11 @@ const EditBox = ({ contentToEdit, id }: {contentToEdit: string, id: string}) => 
   }, [setEdit]);
 
   return (
-    <form onSubmit={submitEdit} onClick={(e)=>e.stopPropagation()} className="bg-white shadow-lg rounded-md flex gap-3 items-start p-5 w-full" ref={form}>
+    <form onSubmit={submitEdit} onClick={(e) => e.stopPropagation()} className="bg-white shadow-lg rounded-md flex gap-3 items-start p-5 w-full" ref={form}>
+      {
+        //for error validtion if delete post fails due to internet or server error
+        failed && <aside className="w-48 text-center z-50 fixed top-8 text-white bg-red py-4 rounded-md">Editing Post Failed!</aside>
+      }
       <Image
         alt="dp"
         src={session?.user.image || dp}

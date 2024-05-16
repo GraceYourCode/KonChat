@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { myContext } from "@/utils/context";
 import { date } from "@/utils/functions";
 import { useRouter } from "next/navigation";
+import pubnub from "@/utils/pubnub";
 
 
 const Replybox = () => {
@@ -18,6 +19,7 @@ const Replybox = () => {
   const input = useRef<HTMLTextAreaElement>(null);
   const form = useRef<HTMLFormElement>(null);
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [failed, setFailed] = useState<boolean>(false);
 
   const submitReply = async (e: React.FormEvent<HTMLFormElement>) => {
     e.stopPropagation();
@@ -39,13 +41,24 @@ const Replybox = () => {
         body: JSON.stringify(newReply)
       });
 
-      const pushData = await response.json();
-      console.log(pushData)
+      const data = await response.json();
+      console.log(data)
 
       if (response.ok) {
-        router.push(`/post?id=${reply.postId}`)
-        setReply(null);
-        setContent("")
+        if (typeof data !== "object") {
+          setFailed(true)
+          setTimeout(() => {
+            setFailed(false)
+          }, 1000);
+        } else {
+          router.push(`/post?id=${reply.postId}`)
+          setReply(null);
+          setContent("");
+          pubnub.publish({
+            channel: "replies",
+            message: { sender: pubnub.getUUID(), content: data },
+          });
+        }
       };
 
     } catch (error) {
@@ -77,7 +90,7 @@ const Replybox = () => {
         // If this checks through it means the userClicked outside the parent element
         setReply(null)
       }
-    };  
+    };
 
     document.addEventListener('click', handleOutsideClick);
 
@@ -88,10 +101,14 @@ const Replybox = () => {
 
   return (
     <>
-    {
-      reply &&
-      reply.show &&
-        <form onSubmit={submitReply} className="bg-white shadow-lg rounded-md flex gap-3 items-start p-5 w-95%" ref={form} onClick={(e)=>e.stopPropagation()}>
+      {
+        //for error validtion if creating reply fails due to internet or server error
+        failed && <aside className="w-48 text-center z-50 fixed top-8 text-white bg-red py-4 rounded-md">Unable tyo Send Reply!</aside>
+      }
+      {
+        reply &&
+        reply.show &&
+        <form onSubmit={submitReply} className="bg-white shadow-lg rounded-md flex gap-3 items-start p-5 w-95%" ref={form} onClick={(e) => e.stopPropagation()}>
           <Image
             alt="dp"
             src={session?.user.image || dp}
@@ -123,7 +140,7 @@ const Replybox = () => {
             </button>
           }
         </form>
-    }
+      }
     </>
   )
 }

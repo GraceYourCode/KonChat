@@ -4,6 +4,7 @@ import { IUser } from "@/utils/types"
 import Image from "next/image"
 import { useSearchParams } from "next/navigation"
 import { Suspense, useEffect, useState } from "react";
+import ProfileWidget from "./widgets/ProfileWidget";
 
 const DemoProfile = () => {
   const searchParams = useSearchParams();
@@ -25,7 +26,7 @@ const DemoProfile = () => {
   return (
     <div className="py-4 flex flex-col gap-y-6">
       {
-        user &&
+        user ?
         <>
           <Image
             src={user.image as string}
@@ -41,7 +42,8 @@ const DemoProfile = () => {
           </div>
 
           <p className="text-contents text-sm">Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta recusandae est explicabo architecto necessitatibus incidunt sunt accusamus dolores. Quibusdam, voluptatibus.</p>
-        </>
+        </>:
+        <ProfileWidget/>
       }
     </div>
   )

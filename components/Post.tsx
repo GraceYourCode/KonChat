@@ -84,7 +84,7 @@ const Post = ({ post }: { post: IPostProps }) => {
                   id={post._id.toString()}
                   usersThatLiked={post.usersThatLiked} />
 
-                <div className="font-medium text-blue flex items-center cursor-pointer w-10 h-10 hover:bg-gray-blue justify-center rounded-full">
+                <div className="font-medium text-blue flex items-center cursor-pointer xl:w-10 xl:h-10 xl:hover:bg-gray-blue justify-center rounded-full">
                   <FiMessageCircle className="text-lg" />
                   <small className="">{post.replies.length}</small>
                 </div>

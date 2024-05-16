@@ -14,6 +14,7 @@ const Textbox = ({ post, close }: { post: boolean, close: () => void }) => {
   const [content, setContent] = useState<string>("");
   const input = useRef<HTMLTextAreaElement>(null);
   const [submitting, setSubmitting] = useState<boolean>(false);
+  const [failed, setFailed] = useState<boolean>(false);
 
   const submitPost = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,8 +28,6 @@ const Textbox = ({ post, close }: { post: boolean, close: () => void }) => {
       dateCreated: await date(),
     }
 
-    console.log(newPost);
-
     try {
       const response: Response = await fetch("/api/posts/new", {
         method: "POST",
@@ -36,17 +35,23 @@ const Textbox = ({ post, close }: { post: boolean, close: () => void }) => {
       });
 
       const data = await response.json();
-      console.log(data)
 
       //re-routes to home page
       if (response.ok) {
-        console.log(data, "success");
+        if (typeof data !== "object") {
+          setFailed(true)
+          setTimeout(() => {
+            setFailed(false)
+          }, 1000);
+        } else {
+          console.log(data, "success");
         setContent("");
         close();
         pubnub.publish({
           channel: "posts",
           message: { sender: pubnub.getUUID(), content: data },
         })
+      }
       };
 
     } catch (error) {
@@ -76,6 +81,10 @@ const Textbox = ({ post, close }: { post: boolean, close: () => void }) => {
         post &&
         <>
           <div className="fixed w-screen h-screen bg-black opacity-60 top-0 z-50"></div>
+          {
+            //for error validtion if send posts fails due to internet or server error
+            failed && <aside className="w-48 text-center z-50 fixed top-8 text-white bg-red py-4 rounded-md">Unable to create post!</aside>
+          }
           <div className={`fixed w-screen h-screen z-50 flex justify-center items-center`}>
             <div className="align-page">
               <form className="bg-white shadow-lg rounded-md p-5 relative flex flex-col gap-4" onSubmit={(e) => submitPost(e)}>
