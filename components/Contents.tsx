@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from "react";
 
-const Contents = ({content, replyingTo, id}: {content: string, replyingTo?: string, id?:string}) => {
+const Contents = ({ content, replyingTo, id }: { content: string, replyingTo?: string, id?: string }) => {
   const pathname = usePathname();
   const router = useRouter();
   const [click, setClick] = useState<boolean>(false);
@@ -12,34 +12,47 @@ const Contents = ({content, replyingTo, id}: {content: string, replyingTo?: stri
 
   return (
     <p className="text-sm text-contents">
-      
+
       {
-        replyingTo ?  (
+        replyingTo ? (
           <>
-          <span className="text-blue font-medium" onClick={(e) => {
-            e.stopPropagation();
-            router.push(`/profile?id=${id}`)
-          }}>{`@${replyingTo} `}</span>
-          {click? formattedContent : content.substring(0, 200)}...
-          <button onClick={(e)=>{
-            e.stopPropagation();
-            setClick(prev => !prev);
-          }} className="text-blue font-medium italic">{click ? "see less" : "see more"}</button>
+            <span className="text-blue font-medium"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push(`/profile?id=${id}`)
+              }
+              }>
+              {`@${replyingTo} `}
+            </span>
+            {
+              content.length > 200 ?
+                (
+                  <>
+                    {content.substring(0, 200)}...
+                    <button onClick={(e) => {
+                      e.stopPropagation();
+                      setClick(prev => !prev);
+                    }} className="text-blue font-medium italic">{click ? "see less" : "see more"}</button>
+                  </>
+                ) :
+                formattedContent
+            }
+
           </>
         ) :
-        pathname === "/post" ?
-        formattedContent:
-        content.length > 200 ?
-        (
-          <>
-          {content.substring(0, 200)}...
-          <button onClick={(e)=>{
-            e.stopPropagation();
-            setClick(prev => !prev);
-          }} className="text-blue font-medium italic">{click ? "see less" : "see more"}</button>
-          </>
-        ) : 
-        formattedContent
+          pathname === "/post" ?
+            formattedContent :
+            content.length > 200 ?
+              (
+                <>
+                  {content.substring(0, 200)}...
+                  <button onClick={(e) => {
+                    e.stopPropagation();
+                    setClick(prev => !prev);
+                  }} className="text-blue font-medium italic">{click ? "see less" : "see more"}</button>
+                </>
+              ) :
+              formattedContent
       }
     </p>
   )

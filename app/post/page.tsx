@@ -3,6 +3,7 @@
 import BackBtn from '@/components/Back';
 import DeleteModal from '@/components/DeleteModal';
 import Post from '@/components/Post';
+import PostPageWidget from '@/components/widgets/PostPageWidget';
 import { myContext } from "@/utils/context"
 import pubnub from '@/utils/pubnub';
 import { IPostProps, IReplyProps, IReplyState } from '@/utils/types';
@@ -145,7 +146,8 @@ const Page = () => {
       }}>
         <main className="align-page flex flex-col gap-y-4 items-center py-5 md:py-8">
           {
-            post && <Post post={post as IPostProps} />
+            post ?
+             <Post post={post as IPostProps} />: <PostPageWidget/>
           }
           {showDelete && <DeleteModal />}
         </main>

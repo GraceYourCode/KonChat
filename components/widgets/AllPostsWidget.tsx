@@ -1,4 +1,6 @@
 import PostWidget from "./PostWidget"
+import Image from "next/image"
+import image from "@/public/Images/Untitled-2.png"
 
 const AllPostsWidget = () => {
   return (
