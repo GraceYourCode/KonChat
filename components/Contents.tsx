@@ -28,7 +28,7 @@ const Contents = ({ content, replyingTo, id }: { content: string, replyingTo?: s
               content.length > 200 ?
                 (
                   <>
-                  {click ? content.substring(0, 200) : formattedContent}...
+                  {click ? formattedContent : content.substring(0, 200)}...
                     <button onClick={(e) => {
                       e.stopPropagation();
                       setClick(prev => !prev);
@@ -45,7 +45,7 @@ const Contents = ({ content, replyingTo, id }: { content: string, replyingTo?: s
             content.length > 200 ?
               (
                 <>
-                  {click ? content.substring(0, 200) : formattedContent}...
+                  {click ? formattedContent : content.substring(0, 200)}...
                   <button onClick={(e) => {
                     e.stopPropagation();
                     setClick(prev => !prev);

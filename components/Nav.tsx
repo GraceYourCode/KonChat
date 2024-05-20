@@ -66,7 +66,7 @@ const Navigation = () => {
               ) : (
 
                 <>
-                  {
+                  {/* {
                     //since user is not logged in, it asks user to log in
                     providers &&
                     Object.values(providers).map((provider) => (
@@ -74,7 +74,8 @@ const Navigation = () => {
                         onClick={() => signIn(provider.id)}>
                         Sign In
                       </button>
-                    ))}
+                    ))} */}
+                    <button className="auth" onClick={() => signIn("github")}>Sign In</button>
                 </>
               )}
           </div>
