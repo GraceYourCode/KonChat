@@ -37,11 +37,11 @@ const DemoProfile = () => {
             className="rounded-full" />
 
           <div>
-            <header className="font-medium text-dark-blue text-2xl">GraceYourCode</header>
-            <p className="text-contents">@graceyourcode</p>
+            <header className="font-medium text-dark-blue text-2xl">{user.name}</header>
+            <p className="text-contents">{`@${user.username}`}</p>
           </div>
 
-          <p className="text-contents text-sm">Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta recusandae est explicabo architecto necessitatibus incidunt sunt accusamus dolores. Quibusdam, voluptatibus.</p>
+          <p className="text-contents text-sm">{user.description}</p>
         </>:
         <ProfileWidget/>
       }

@@ -79,10 +79,10 @@ const Navigation = () => {
         </div>
       </nav>
       {logOut &&
-        <div className="w-full relative z-50 flex flex-col items-end align-page">
+        <div className="w-full fixed top-8 z-50 flex flex-col items-end align-page">
 
-          <div className="bg-white mt-6 text-dark-blue z-50 right-0 w-48 px-5 py-8 rounded-md flex flex-col gap-y-6">
-            <Link href={`/profile/${session?.user.id}`} className="flex gap-3 items-center">
+          <div className="bg-white mt-6 text-dark-blue z-50 right-0 w-48 px-5 py-8 rounded-md flex flex-col gap-y-6 shadow-lg">
+            <Link href={`/profile?id=${session?.user.id}`} className="flex gap-3 items-center">
               <CgProfile />
               Profile
             </Link>

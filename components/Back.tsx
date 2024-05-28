@@ -9,15 +9,15 @@ const BackBtn = () => {
     <>
       {<div className="w-screen h-16"></div>}
 
-    <div className="w-screen flex justify-center fixed bg-background z-50">
-    <div className="align-page flex">
+      <div className="w-screen flex justify-center fixed bg-background z-40">
+        <div className="align-page flex">
 
-    <button className="bg-white px-12 h-10 rounded-md shadow-lg flex items-center gap-4 my-5 text-dark-blue cursor-pointer" onClick={()=>router.back()}>
-      <IoIosArrowBack/>
-      <span>Back</span>
-    </button>
-    </div>
-    </div>
+          <button className="bg-white px-12 h-10 rounded-md shadow-lg flex items-center gap-4 my-5 text-dark-blue cursor-pointer" onClick={() => router.back()}>
+            <IoIosArrowBack />
+            <span>Back</span>
+          </button>
+        </div>
+      </div>
     </>
   )
 }

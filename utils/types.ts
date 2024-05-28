@@ -25,8 +25,8 @@ export interface IUser extends Document {
   email: string;
   username: string;
   image?: string;
-  name?: string;
-  description?: string;
+  name: string;
+  description: string;
 }
 
 export interface IProvider {
