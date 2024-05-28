@@ -41,10 +41,12 @@ const Navigation = () => {
   return (
     <>
       <div className="w-screen bg-background" style={{ height: height }}></div>
-      <nav className={`fixed bg-background shadow-lg w-screen h-12 flex items-center justify-center z-50`} ref={navBar}>
-        <div className="align-page relative">
+      <nav className={`fixed bg-background shadow-lg w-screen h-12 xl:h-16 flex items-center justify-center z-50`} ref={navBar}>
+        <div className="align-page">
           <div className="flex justify-between items-center">
-            <Image src={logo} alt="logo" width={140} />
+            <Link href={"/"}>
+              <Image src={logo} alt="logo" width={140} />
+            </Link>
             {
               //checks if user is logged in, it displays sign out so the user can sign out
               session?.user ? (
@@ -69,33 +71,28 @@ const Navigation = () => {
               ) : (
 
                 <>
-                  {/* {
-                    //since user is not logged in, it asks user to log in
-                    providers &&
-                    Object.values(providers).map((provider) => (
-                      <button key={provider.name} className="auth"
-                        onClick={() => signIn(provider.id)}>
-                        Sign In
-                      </button>
-                    ))} */}
                   <button className="auth" onClick={() => sign_In()}>Sign In</button>
                 </>
               )}
           </div>
 
-          {logOut &&
-            <div>
-              <Link href={`/profile/${session?.user.id}`}>
-                <CgProfile />
-                Profile
-              </Link>
-              <button onClick={() => signOut()}>
-                <PiSignOutBold />
-                Sign Out
-              </button>
-            </div>}
         </div>
       </nav>
+      {logOut &&
+        <div className="w-full relative z-50 flex flex-col items-end align-page">
+
+          <div className="bg-white mt-6 text-dark-blue z-50 right-0 w-48 px-5 py-8 rounded-md flex flex-col gap-y-6">
+            <Link href={`/profile/${session?.user.id}`} className="flex gap-3 items-center">
+              <CgProfile />
+              Profile
+            </Link>
+            <button onClick={() => signOut()} className="flex gap-3 items-center">
+              <PiSignOutBold />
+              Sign Out
+            </button>
+          </div>
+        </div>
+      }
       <Textbox post={post} close={togglePost} />
       {login && <SignInModal click={sign_In} />}
     </>
