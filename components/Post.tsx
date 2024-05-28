@@ -90,17 +90,17 @@ const Post = ({ post }: { post: IPostProps }) => {
                 </div>
               </aside>
 
-<div className="sm:hidden">
-              {session?.user &&
-                (session?.user.name.replace(" ", "").toLocaleLowerCase() === post.creator.username ? (
-                  <div className="flex gap-3 items-center">
-                    <Button type="Delete" click={() => popUpDelete(post._id.toString())} />
-                    <Button type="Edit" click={showEditBox} />
-                  </div>
-                ) :
-                  <Button click={showReplyBox} type="Reply" />)
-              }
-</div>
+              <div className="sm:hidden">
+                {session?.user &&
+                  (session?.user.name.replace(" ", "").toLocaleLowerCase() === post.creator.username ? (
+                    <div className="flex gap-3 items-center">
+                      <Button type="Delete" click={() => popUpDelete(post._id.toString())} />
+                      <Button type="Edit" click={showEditBox} />
+                    </div>
+                  ) :
+                    <Button click={showReplyBox} type="Reply" />)
+                }
+              </div>
             </div>
           }
         </main>

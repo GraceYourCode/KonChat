@@ -1,12 +1,13 @@
 "use client"
 
-import { getProviders, signIn, signOut, useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import Textbox from "./Textbox";
 import logo from '@/public/Images/my-logo.png'
 import { MdOutlinePostAdd } from "react-icons/md";
+import SignInModal from "./SignIn";
 
 
 const Navigation = () => {
@@ -17,18 +18,13 @@ const Navigation = () => {
   const navBar = useRef<HTMLDivElement>(null)
   const [height, setHeight] = useState<number>();
   const [post, setPost] = useState<boolean>(false);
+  const [login, setLogin] = useState(false);
 
   const togglePost = () => setPost(prev => !prev)
 
+  const sign_In = () => setLogin(prev => !prev);
+
   useEffect(() => {
-    const setToProviders = async () => {
-      const response = await getProviders();
-
-      setProviders(response);
-    }
-
-    setToProviders();
-
     if (navBar.current) {
       console.log(navBar.current.clientHeight)
       setHeight(navBar.current?.clientHeight);
@@ -75,13 +71,14 @@ const Navigation = () => {
                         Sign In
                       </button>
                     ))} */}
-                    <button className="auth" onClick={() => signIn("github")}>Sign In</button>
+                    <button className="auth" onClick={() => sign_In()}>Sign In</button>
                 </>
               )}
           </div>
         </div>
       </nav>
       <Textbox post={post} close={togglePost} />
+      {login && <SignInModal click={sign_In} />}
     </>
   )
 }

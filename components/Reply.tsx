@@ -14,7 +14,7 @@ import { useSession } from "next-auth/react";
 import { Schema } from "mongoose";
 import { usePathname, useRouter } from "next/navigation";
 
-const Reply = ({ post }: { post: IReplyProps}) => {
+const Reply = ({ post }: { post: IReplyProps }) => {
   const { data: session } = useSession();
   const pathname = usePathname();
   const router = useRouter();
@@ -54,18 +54,8 @@ const Reply = ({ post }: { post: IReplyProps}) => {
         edit.id === post._id && <EditBox contentToEdit={post.content} id={post._id.toString()} />
       }
 
-      <div className={`${edit === null ? "flex" : edit.id === post._id ? "hidden" : "flex"} ${pathname!=="/post" ? "cursor-pointer hover:shadow-md w-full" : "w-95%"} bg-white p-5 rounded-md gap-4 items-start min-h-fit`}
-      onClick={()=>pathname!=="/post" && router.push(`/post?id=${post.postId}`)}>
-        {
-          // this aside tag below is meant for desktop view and tablet view 
-          <aside className="hidden sm:flex">
-            <LikeButton likes={post.likes}
-              id={post._id.toString()}
-              desktop={true}
-              usersThatLiked={post.usersThatLiked} />
-          </aside>
-        }
-
+      <div className={`${edit === null ? "flex" : edit.id === post._id ? "hidden" : "flex"} ${pathname !== "/post" ? "cursor-pointer hover:shadow-md w-full" : "w-95%"} bg-white p-5 rounded-md gap-4 items-start min-h-fit`}
+        onClick={() => pathname !== "/post" && router.push(`/post?id=${post.postId}`)}>
         <main className="flex flex-col w-full gap-y-3">
           <div className="flex justify-between w-full">
             <Identifier dateCreated={dateCreated}
@@ -75,7 +65,7 @@ const Reply = ({ post }: { post: IReplyProps}) => {
             {session?.user &&
               (session?.user.name.replace(" ", "").toLocaleLowerCase() === post.creator.username ? (
                 <div className="flex gap-3 items-center">
-                  <Button desktop={true} type="Delete" click={()=>popUpDelete(post._id.toString())}/>
+                  <Button desktop={true} type="Delete" click={() => popUpDelete(post._id.toString())} />
                   <Button desktop={true} type="Edit" click={showEditBox} />
                 </div>
               ) :
@@ -83,26 +73,28 @@ const Reply = ({ post }: { post: IReplyProps}) => {
             }
           </div>
 
-          <Contents content={post.content} replyingTo={post.replyingTo} id={post.postId.toString()}/>
+          <Contents content={post.content} replyingTo={post.replyingTo} id={post.postId.toString()} />
 
           {
             // for sreens with smaller width
-            <div className="flex sm:hidden justify-between">
-              <aside className="">
+            <div className="flex items-center justify-between">
+              <aside className="flex items-center gap-5">
                 <LikeButton likes={post.likes}
                   id={post._id.toString()}
                   usersThatLiked={post.usersThatLiked} />
               </aside>
 
-              {session?.user &&
-                (session?.user.name.replace(" ", "").toLocaleLowerCase() === post.creator.username ? (
-                  <div className="flex gap-3 items-center">
-                    <Button type="Delete" click={()=>popUpDelete(post._id.toString())} />
-                    <Button type="Edit" click={showEditBox} />
-                  </div>
-                ) :
-                  <Button click={showReplyBox} type="Reply" />)
-              }
+              <div className="sm:hidden">
+                {session?.user &&
+                  (session?.user.name.replace(" ", "").toLocaleLowerCase() === post.creator.username ? (
+                    <div className="flex gap-3 items-center">
+                      <Button type="Delete" click={() => popUpDelete(post._id.toString())} />
+                      <Button type="Edit" click={showEditBox} />
+                    </div>
+                  ) :
+                    <Button click={showReplyBox} type="Reply" />)
+                }
+              </div>
             </div>
           }
         </main>
