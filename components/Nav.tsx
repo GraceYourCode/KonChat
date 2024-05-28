@@ -1,6 +1,6 @@
 "use client"
 
-import { useSession } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -8,6 +8,9 @@ import Textbox from "./Textbox";
 import logo from '@/public/Images/my-logo.png'
 import { MdOutlinePostAdd } from "react-icons/md";
 import SignInModal from "./SignIn";
+import { PiSignOutBold } from "react-icons/pi";
+import { CgProfile } from "react-icons/cg";
+import Link from "next/link";
 
 
 const Navigation = () => {
@@ -19,10 +22,13 @@ const Navigation = () => {
   const [height, setHeight] = useState<number>();
   const [post, setPost] = useState<boolean>(false);
   const [login, setLogin] = useState(false);
+  const [logOut, setLogOut] = useState(false);
 
   const togglePost = () => setPost(prev => !prev)
 
   const sign_In = () => setLogin(prev => !prev);
+
+  const sign_Out = () => setLogOut(prev => !prev);
 
   useEffect(() => {
     if (navBar.current) {
@@ -36,7 +42,7 @@ const Navigation = () => {
     <>
       <div className="w-screen bg-background" style={{ height: height }}></div>
       <nav className={`fixed bg-background shadow-lg w-screen h-12 flex items-center justify-center z-50`} ref={navBar}>
-        <div className="align-page">
+        <div className="align-page relative">
           <div className="flex justify-between items-center">
             <Image src={logo} alt="logo" width={140} />
             {
@@ -45,17 +51,18 @@ const Navigation = () => {
                 <div className="flex items-center gap-6">
 
                   <Image
-                    className="rounded-full"
+                    className="rounded-full cursor-pointer"
                     width={40}
                     height={40}
                     src={session?.user.image}
                     alt="profile pic"
-                    quality={100} />
+                    quality={100}
+                    onClick={() => sign_Out()} />
 
                   {pathname === "/" &&
                     <>
                       <button className="bg-blue px-8 py-2 text-white rounded-full hidden sm:block text-xs" onClick={togglePost}>Post</button>
-                      <button className="bg-blue w-10 h-10  text-white rounded-full sm:hidden items-center flex justify-center" onClick={togglePost}><MdOutlinePostAdd className="text-xl"/></button>
+                      <button className="bg-blue w-10 h-10  text-white rounded-full sm:hidden items-center flex justify-center" onClick={togglePost}><MdOutlinePostAdd className="text-xl" /></button>
                     </>
                   }
                 </div>
@@ -71,10 +78,22 @@ const Navigation = () => {
                         Sign In
                       </button>
                     ))} */}
-                    <button className="auth" onClick={() => sign_In()}>Sign In</button>
+                  <button className="auth" onClick={() => sign_In()}>Sign In</button>
                 </>
               )}
           </div>
+
+          {logOut &&
+            <div>
+              <Link href={`/profile/${session?.user.id}`}>
+                <CgProfile />
+                Profile
+              </Link>
+              <button onClick={() => signOut()}>
+                <PiSignOutBold />
+                Sign Out
+              </button>
+            </div>}
         </div>
       </nav>
       <Textbox post={post} close={togglePost} />
