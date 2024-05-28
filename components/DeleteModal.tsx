@@ -48,7 +48,7 @@ const DeleteModal = () => {
         failed && <aside className="w-48 text-center z-50 fixed top-8 text-white bg-red py-4 rounded-md">Deleting Post Failed!</aside>
       }
       <div className="fixed w-screen h-screen flex justify-center items-center px-4 xs:p-0 z-50 top-0 left-0">
-        <main className="bg-white p-7 opacity-100 flex flex-col gap-5 rounded-md xs:w-96">
+        <main className="bg-white p-7 opacity-100 flex flex-col gap-5 rounded-md xs:w-96 w-full">
           <h4 className="text-dark-blue font-semibold text-xl">Delete Post</h4>
           <p className="text-contents text-lg">
             Are you sure you want to delete this comment? This will remove the comment and can't be undone.
